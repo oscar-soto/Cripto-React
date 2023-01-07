@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useSelectCoin } from '../hooks/useSelectCoin';
 
 import { coins } from '../data/coins';
+import { Error } from './error';
 
 const InputSubmit = styled.input`
   width: 100%;
@@ -24,8 +25,14 @@ const InputSubmit = styled.input`
 `;
 
 export const Form = () => {
-  const [coin, SelectCoins] = useSelectCoin('Elige tu moneda', coins);
   const [cryptos, setCryptos] = useState([]);
+  const [error, setError] = useState(false);
+
+  const [coin, SelectCoins] = useSelectCoin('Elige tu Moneda', coins);
+  const [cryptoCurrency, SelectCryptoCurrencys] = useSelectCoin(
+    'Elige tu Ciptomoneda',
+    cryptos
+  );
 
   useEffect(() => {
     const requesAPI = async () => {
@@ -41,16 +48,33 @@ export const Form = () => {
         return obj;
       });
 
-      setCryptos(CryptoArray)
+      setCryptos(CryptoArray);
     };
 
     requesAPI();
   }, []);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // validated without empty
+    if ([coin, cryptoCurrency].includes('')) {
+      setError(true);
+      return;
+    }
+
+    setError(false);
+  };
+
   return (
-    <form>
-      <SelectCoins />
-      <InputSubmit type="submit" value="cotizar" />
-    </form>
+    <>
+      {error && <Error>Todos los campos son obligatorios</Error>}
+
+      <form onSubmit={handleSubmit}>
+        <SelectCoins />
+        <SelectCryptoCurrencys />
+        <InputSubmit type="submit" value="cotizar" />
+      </form>
+    </>
   );
 };
