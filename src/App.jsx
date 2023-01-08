@@ -5,6 +5,7 @@ import { Form } from './components/Form';
 import { Result } from './components/Result';
 
 import ImagenCript from './img/imagen-criptos.png';
+import { Spinner } from './components/Spinner';
 
 // Styles
 const Container = styled.div`
@@ -45,9 +46,12 @@ const Heading = styled.h1`
 function App() {
   const [coins, setCoins] = useState({});
   const [result, setResult] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (Object.keys(coins).length > 1) {
+      setLoading(true);
+      setResult({})
       const { coin, cryptoCurrency } = coins;
 
       const quoteCrypto = async () => {
@@ -57,6 +61,7 @@ function App() {
         const result = await resp.json();
 
         setResult(result.DISPLAY[cryptoCurrency][coin]);
+        setLoading(false);
       };
 
       quoteCrypto();
@@ -70,7 +75,8 @@ function App() {
         <Heading>Cotiza Criptomonedas al instante</Heading>
         <Form setCoins={setCoins} />
 
-        {result.PRICE && <Result result={result}/>}
+        {loading && <Spinner />}
+        {result.PRICE && <Result result={result} />}
       </div>
     </Container>
   );

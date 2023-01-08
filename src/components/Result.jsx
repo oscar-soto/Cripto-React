@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
 
+// Styles
 const ResultDiv = styled.div`
   display: flex;
   align-items: center;
-  grid-template: 1rem;
+  gap: 1rem;
   margin-top: 30px;
   color: #fff;
   font-family: 'Lato', sans-serif;
